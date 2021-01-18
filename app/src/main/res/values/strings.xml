@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">BarOfLight</string>
+    <string name="title_front">Front</string>
+    <string name="title_beam">Fill</string>
+    <string name="title_ditch">Ditch</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_front">
+
+    <fragment
+        android:id="@+id/navigation_front"
+        android:name="com.bertalabs.baroflight.ui.front.FrontFragment"
+        android:label="@string/title_front"
+        tools:layout="@layout/fragment_front" />
+
+    <fragment
+        android:id="@+id/navigation_beam"
+        android:name="com.bertalabs.baroflight.ui.fill.FillFragment"
+        android:label="@string/title_beam"
+        tools:layout="@layout/fragment_fill" />
+
+    <fragment
+        android:id="@+id/navigation_fog"
+        android:name="com.bertalabs.baroflight.ui.ditch.DitchFragment"
+        android:label="@string/title_ditch"
+        tools:layout="@layout/fragment_ditch" />
+</navigation>

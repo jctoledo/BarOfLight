@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_front"
+        android:icon="@drawable/headlight"
+        android:title="@string/title_front" />
+
+    <item
+        android:id="@+id/navigation_beam"
+        android:icon="@drawable/beamlight"
+        android:title="@string/title_beam" />
+
+    <item
+        android:id="@+id/navigation_fog"
+        android:icon="@drawable/ditchlight"
+        android:title="@string/title_ditch" />
+
+</menu>
