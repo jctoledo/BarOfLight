@@ -11,6 +11,7 @@ import android.net.wifi.ScanResult;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.bertalabs.baroflight.ext.LightLocationCache;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.RequiresApi;
@@ -20,16 +21,35 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+public class MainActivity extends AppCompatActivity  {
+    private LightLocationCache cache = LightLocationCache.getInstance();
+    @Override
+    protected void onResume(){
+        super.onResume();
+        cache.update();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
+        cache = LightLocationCache.getInstance();
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
