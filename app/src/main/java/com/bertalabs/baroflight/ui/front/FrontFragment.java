@@ -22,6 +22,7 @@ public class FrontFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         frontViewModel =
                 ViewModelProviders.of(this).get(FrontViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_front, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
         frontViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

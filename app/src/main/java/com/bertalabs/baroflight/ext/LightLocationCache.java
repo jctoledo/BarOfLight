@@ -1,112 +1,88 @@
 package com.bertalabs.baroflight.ext;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import android.util.Log;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class LightLocationCache {
-    private LocalDateTime cacheStart;
-    private static  LightLocationCache instance;
     private static final String BASE_HTTP_ADDR = "http://192.168.1.";
-    private HashMap<String, String> ipToRawOutput = new HashMap<>();
+    private static LightLocationCache instance;
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .writeTimeout(5, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .build();
+    /**
+     * How often to perform hard refresh
+     */
+    // TODO change back to 60
+    public int refreshRateInSeconds = 6;
+    public LocalDateTime startTime;
+    private String TAG = "LIGHTCACHE";
     private HashMap<String, Light> ipToLight = new HashMap<>();
+    private Set<Light> disconnectedLights = new HashSet<>();
 
 
-    private LightLocationCache(){
-        if (cacheStart == null || Duration.between(cacheStart, LocalDateTime.now()).getSeconds() > 6){
-            update();
-            cacheStart = LocalDateTime.now();
+    private LightLocationCache() {
+        if (startTime == null ||
+                Duration.between(startTime, LocalDateTime.now()).getSeconds() > refreshRateInSeconds) {
+            ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
+            startTime = LocalDateTime.now();
         }
+    }
+
+    synchronized public static LightLocationCache getInstance() {
+        if (instance == null) {
+            instance = new LightLocationCache();
+        }
+        if (Duration.between(instance.startTime, LocalDateTime.now()).getSeconds() > 5)
+            instance.update();
+        return instance;
+    }
+
+    public List<Light> getLights() {
+        return (List<Light>) this.ipToLight.values();
     }
 
     //TODO: detect a lost light
     //TODO: detect a new light
-    public void update(){
-        ipToRawOutput = findLightIPAndState(BASE_HTTP_ADDR);
-        ipToLight = makeIPToLight(ipToRawOutput);
-    }
-
-    synchronized public static LightLocationCache getInstance(){
-        if (instance == null){
-            instance = new LightLocationCache();
+    public void update() {
+        if (Duration.between(this.startTime,
+                LocalDateTime.now()).getSeconds() > refreshRateInSeconds) {
+            Log.d(TAG, "regular update - after refresh seconds ");
+            ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
+        } else {
+            fastUpdate();
         }
-        return instance;
     }
 
-    private HashMap<String, Light> makeIPToLight(HashMap<String, String> ipToRaw){
-        Pattern mac = Pattern.compile("MAC: (.*)");
-        Pattern requestedPwr = Pattern.compile("Requested Power .*:(.*)");
-        Pattern actualPwr = Pattern.compile("Actual Power .*:(.*)");
-        Pattern health = Pattern.compile("Health: OK");
-        Pattern rssi = Pattern.compile("RSSI: (-\\d+)");
-
-        for (Map.Entry<String, String> entry: ipToRaw.entrySet()){
-
-            Matcher macM = mac.matcher(entry.getValue());
-            Matcher reqM = requestedPwr.matcher(entry.getValue());
-            Matcher actM = actualPwr.matcher(entry.getValue());
-            Matcher healM = health.matcher(entry.getValue());
-            Matcher rssiM = rssi.matcher(entry.getValue());
-            if(macM.find() && reqM.find() &&
-            actM.find() && rssiM.find()){
-                String m = macM.group(1);
-                int actP = Integer.valueOf(actM.group(1).trim());
-                int reqP = Integer.valueOf(reqM.group(1).trim());
-                int x = Integer.valueOf(rssiM.group(1).trim());
-                System.out.println(m);
-                int i =0;
+    // go through lights in the cache and verify that they are still there
+    private void fastUpdate() {
+        // first we need to check if there are already some disconnected lights
+        // iterate over disconnected lights and make sure they are still disconnected
+        Set<Light> disconnected = new HashSet<>();
+        for (Light l : disconnectedLights) {
+            Log.d(TAG, "fast update - found an already disconnected light");
+            if (NetworkUtils.checkLightStatus(l.ip_address)) {
+                disconnected.add(l);
             }
-
         }
-        return null;
-    }
-
-
-    private HashMap<String, String> findLightIPAndState(String baseIp) {
-        final Map<String, String> rm = new HashMap<>();
-        OkHttpClient client = new OkHttpClient();
-        for (int i = 1; i <= 255; i++) {
-            final String adr = baseIp + String.valueOf(i)+"/status";
-            Request req = new Request.Builder().url(adr).build();
-            client.newCall(req).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    try (ResponseBody responseBody = response.body()) {
-                        if (!response.isSuccessful())
-                            throw new IOException("Unexpected code " + response);
-                        String lightReplyRaw = new BufferedReader(
-                                new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
-                                .collect(Collectors.joining("\n"));
-
-                        if(lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")){
-                            rm.put(adr, lightReplyRaw);
-                        }
-                    }
-                }
-            });
-
+        for (Map.Entry<String, Light> entry : ipToLight.entrySet()) {
+            if (!NetworkUtils.checkLightStatus(entry.getKey())) {
+                disconnected.add(entry.getValue());
+                Log.d(TAG, "fast update - adding a disconnected light");
+            }
         }
-        return (HashMap<String, String>) rm;
+        disconnectedLights = disconnected;
     }
 
 

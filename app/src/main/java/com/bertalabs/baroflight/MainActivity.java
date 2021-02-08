@@ -10,6 +10,8 @@ import android.net.MacAddress;
 import android.net.wifi.ScanResult;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.widget.Toast;
 
 import com.bertalabs.baroflight.ext.LightLocationCache;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +29,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,16 +44,38 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity  {
     private LightLocationCache cache = LightLocationCache.getInstance();
+
+    Handler handler = new Handler();
+    Runnable runnable;
+    int delay = 3000;
+
     @Override
     protected void onResume(){
+        handler.postDelayed(runnable = new Runnable() {
+            public void run() {
+                handler.postDelayed(runnable, delay);
+                cache.update();
+
+                Toast.makeText(MainActivity.this, "update performed",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }, delay);
         super.onResume();
-        cache.update();
+    }
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
+        super.onPause();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cache = LightLocationCache.getInstance();
+
+
+
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
