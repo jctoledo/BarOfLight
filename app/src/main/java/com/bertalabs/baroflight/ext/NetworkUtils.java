@@ -31,7 +31,7 @@ public class NetworkUtils {
             .readTimeout(15, TimeUnit.SECONDS)
             .build();
 
-    public static HashMap<String, Light> findLights(String baseIp) {
+    public static HashMap<String, Light> findLights(String baseIp) throws UnhealthyLightException{
         final Map<String, String> rm = new HashMap<>();
         OkHttpClient client = new OkHttpClient();
         for (int i = 1; i <= 255; i++) {
@@ -120,19 +120,19 @@ public class NetworkUtils {
     }
 
 
-    private static HashMap<String, Light> makeIPToLight(Map<String, String> ipToRaw) {
+    private static HashMap<String, Light> makeIPToLight(Map<String, String> ipToRaw) throws UnhealthyLightException{
         Pattern mac = Pattern.compile("MAC: (.*)");
         Pattern requestedPwr = Pattern.compile("Requested Power .*:(.*)");
         Pattern actualPwr = Pattern.compile("Actual Power .*:(.*)");
-        Pattern health = Pattern.compile("Health: OK");
+        Pattern typeP = Pattern.compile("Type: (.*)");
         Pattern rssi = Pattern.compile("RSSI: (-\\d+)");
         HashMap<String, Light> rm = new HashMap<>();
         for (Map.Entry<String, String> entry : ipToRaw.entrySet()) {
-
+            Matcher typeM = typeP.matcher(entry.getValue());
             Matcher macM = mac.matcher(entry.getValue());
             Matcher reqM = requestedPwr.matcher(entry.getValue());
             Matcher actM = actualPwr.matcher(entry.getValue());
-            Matcher healM = health.matcher(entry.getValue());
+            boolean health = Pattern.matches("Health: OK", entry.getValue());
             Matcher rssiM = rssi.matcher(entry.getValue());
             if (macM.find() && reqM.find() &&
                     actM.find() && rssiM.find()) {
@@ -140,9 +140,23 @@ public class NetworkUtils {
                 int actP = Integer.parseInt(Objects.requireNonNull(actM.group(1)).trim());
                 int reqP = Integer.parseInt(Objects.requireNonNull(reqM.group(1)).trim());
                 int rssP = Integer.parseInt(Objects.requireNonNull(rssiM.group(1)).trim());
+                Light.LightGroup group = Light.LightGroup.FRONT;
+                // TODO clean this out once you can test it
+                if (typeM.find()){
+                    String lightType = Objects.requireNonNull(typeM.group(1).trim());
+                    if (lightType.equals("Light")){
+                        lightType = "FRONT";
+                        Log.w(TAG, "found an old firmware light!");
+                    }
+                    group = Light.LightGroup.valueOf(lightType);
+                } else {Log.d(TAG, "Could not find a type for this light!!!");}
                 Light l = new Light(entry.getKey(), m, reqP, actP, rssP, LocalDateTime.now(),
-                        Light.LightGroup.FRONT);
-                rm.put(entry.getKey(), l);
+                        group);
+                if (health) {
+                    rm.put(entry.getKey(), l);
+                } else {
+                    throw new UnhealthyLightException(l, "found unhealthy light");
+                }
             }
         }
         return rm;

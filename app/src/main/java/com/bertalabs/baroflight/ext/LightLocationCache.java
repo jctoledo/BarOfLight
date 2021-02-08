@@ -25,17 +25,21 @@ public class LightLocationCache {
      * How often to perform hard refresh
      */
     // TODO change back to 60
-    public int refreshRateInSeconds = 6;
+    public int hardRefreshTime = 6;
     public LocalDateTime startTime;
     private String TAG = "LIGHTCACHE";
     private HashMap<String, Light> ipToLight = new HashMap<>();
     private Set<Light> disconnectedLights = new HashSet<>();
 
-
     private LightLocationCache() {
         if (startTime == null ||
-                Duration.between(startTime, LocalDateTime.now()).getSeconds() > refreshRateInSeconds) {
-            ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
+                Duration.between(startTime, LocalDateTime.now()).getSeconds() > hardRefreshTime) {
+            try {
+                ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
+            } catch (UnhealthyLightException e){
+                disconnectedLights.add(e.light);
+                Log.w(TAG, "found an unhealthy light at cache creation! - "+e.light.ip_address);
+            }
             startTime = LocalDateTime.now();
         }
     }
@@ -57,9 +61,14 @@ public class LightLocationCache {
     //TODO: detect a new light
     public void update() {
         if (Duration.between(this.startTime,
-                LocalDateTime.now()).getSeconds() > refreshRateInSeconds) {
+                LocalDateTime.now()).getSeconds() > hardRefreshTime) {
             Log.d(TAG, "regular update - after refresh seconds ");
-            ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
+            try {
+                ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
+            } catch (UnhealthyLightException e) {
+                disconnectedLights.add(e.light);
+                Log.d(TAG , "Added an unhealthy light - updating! ");
+            }
         } else {
             fastUpdate();
         }
@@ -84,6 +93,4 @@ public class LightLocationCache {
         }
         disconnectedLights = disconnected;
     }
-
-
 }

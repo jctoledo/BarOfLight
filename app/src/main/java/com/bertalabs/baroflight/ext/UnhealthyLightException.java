@@ -1,0 +1,15 @@
+package com.bertalabs.baroflight.ext;
+
+public class UnhealthyLightException extends Exception {
+    public Light light;
+    public UnhealthyLightException(String message) {
+        super(message);
+    }
+    public UnhealthyLightException(Light aLight, String message){
+        super(message);
+        light = aLight;
+    }
+    public Light getLight(){
+        return light;
+    }
+}
