@@ -18,128 +18,144 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/on"
-        app:layout_constraintVertical_bias="0.947" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/on"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="On"
-        app:layout_constraintEnd_toStartOf="@+id/off"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="32dp" />
 
-    <Button
-        android:id="@+id/off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Off"
-        app:layout_constraintBottom_toBottomOf="@+id/on"
+    <ToggleButton
+        android:id="@+id/powerTgl"
+        android:layout_width="360dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/on"
-        app:layout_constraintTop_toTopOf="@+id/on" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/masterSwitch"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/beamLink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/beamLink"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ToggleButton
+        android:id="@+id/beamLink"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:textOff="UNLINKED"
+        android:textOn="LINKED"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BarOutput" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="-5dp" />
+
+    <TextView
+        android:id="@+id/powerLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="INTENSITY"
+        app:layout_constraintBottom_toTopOf="@+id/BarOutput"
+        app:layout_constraintStart_toStartOf="@+id/BarOutput" />
 
     <RadioGroup
         android:id="@+id/BarOutput"
-        android:layout_width="151dp"
-        android:layout_height="112dp"
-
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:checkedButton="@+id/radioMedium"
-
-        app:layout_constraintBottom_toTopOf="@+id/text_home"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/on"
-        app:layout_constraintVertical_bias="0.432">
+        app:layout_constraintTop_toBottomOf="@+id/powerTgl">
 
         <RadioButton
             android:id="@+id/radioHigh"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="High" />
+            android:buttonTint="@android:color/holo_red_dark"
+            android:text="HIGH"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="18sp" />
 
         <RadioButton
             android:id="@+id/radioMedium"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Medium" />
+            android:buttonTint="@android:color/holo_orange_dark"
+            android:text="MED"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="18sp" />
 
         <RadioButton
             android:id="@+id/radioLow"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Low" />
+            android:buttonTint="@android:color/holo_green_dark"
+            android:text="LOW"
+            android:textColor="@android:color/holo_green_light"
+            android:textSize="18sp" />
     </RadioGroup>
 
     <TextView
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:layout_marginTop="40dp"
-
-        android:text="OUTPUT LEVEL"
-        app:layout_constraintBottom_toTopOf="@+id/BarOutput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/on" />
+        android:text="MASTER POWER"
+        app:layout_constraintBottom_toTopOf="@+id/masterSwitch"
+        app:layout_constraintStart_toStartOf="@+id/masterSwitch" />
 
     <TextView
-        android:id="@+id/temperature"
-        android:layout_width="139dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="40dp"
-        android:ems="10"
-        android:text="Temperature"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/temperatureValue"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/BarOutput" />
-
-    <TextView
-        android:id="@+id/temperatureValue"
-        android:layout_width="139dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="44dp"
-        android:ems="10"
-        android:text="34.2 C"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/temperature"
-        app:layout_constraintTop_toBottomOf="@+id/BarOutput" />
-
-    <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temperature"
-        tools:layout_editor_absoluteX="78dp" />
+        android:text="HIGH BEAM LINK"
+        app:layout_constraintBottom_toTopOf="@+id/beamLink"
+        app:layout_constraintStart_toStartOf="@+id/powerLabel" />
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView"-->
-    <!--        android:layout_width="96dp"-->
-    <!--        android:layout_height="16dp"-->
-    <!--        android:text="0.0 C"-->
-    <!--        android:ems="10"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.5"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/temperature"-->
-    <!--        tools:layout_editor_absoluteY="336dp" />-->
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        >-->
+
+    <!--    </androidx.recyclerview.widget.RecyclerView>-->
+
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:layout_width="409dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:cardElevation="10dp"-->
+    <!--        app:cardCornerRadius="20dp"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        app:cardBackgroundColor="@android:color/white"-->
+    <!--        app:cardMaxElevation="12dp"-->
+    <!--        app:cardPreventCornerOverlap="true"-->
+    <!--        app:cardUseCompatPadding="true"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/text_home"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/toggleButton"-->
+    <!--        tools:layout_editor_absoluteX="1dp"-->
+    <!--        >-->
+    <!--        <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="@string/app_name"-->
+    <!--        android:layout_gravity="bottom|center_horizontal"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:layout_marginBottom="20dp"-->
+    <!--        android:textSize="20sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        />-->
+    <!--    </androidx.cardview.widget.CardView>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
