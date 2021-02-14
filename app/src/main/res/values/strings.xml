@@ -3,4 +3,12 @@
     <string name="title_front">Front</string>
     <string name="title_beam">Fill</string>
     <string name="title_ditch">Ditch</string>
+    <string name="temperature">Temperature :</string>
+    <string name="temperatureValue">99 C</string>
+    <string name="ipAddress">http://0.0.0.0</string>
+    <string name="ip">IP Address:</string>
+    <string name="image_of_light_state">image of light state</string>
+    <string name="not_healthy">NOT HEALTHY - THIS IS BAD</string>
+    <string name="healthy">Health OK</string>
+    <string name="disconnected">Disconnected</string>
 </resources>

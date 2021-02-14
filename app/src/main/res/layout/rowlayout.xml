@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     card_view:cardElevation="20dp"
     android:layout_margin="10dp"
-    card_view:contentPadding="20dp"
+    card_view:contentPadding="15sp"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -13,35 +13,75 @@
         android:layout_gravity="center">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/lightImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/light_bulb_black" />
+            android:src="@drawable/light_bulb_black"
+            android:contentDescription="@string/image_of_light_state" />
 
         <TextView
             android:id="@+id/temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@+id/image"
-            android:text="Temperature :"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/lightImage"
+            android:text="@string/temperature"
             android:textColor="#000"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
+
+
         <TextView
             android:id="@+id/temperatureValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="99 C"
-            android:layout_marginLeft="5sp"
-            android:textColor="@android:color/black"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="15dp"
             android:layout_toEndOf="@id/temp"
-            />
+            android:text="@string/temperatureValue"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
         <TextView
+            android:id="@+id/ipValue"
+            android:layout_width="108dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/temperatureValue"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="37dp"
+            android:layout_toEndOf="@+id/ip"
+            android:text="@string/ipAddress"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            />
+            android:layout_below="@+id/temp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="13dp"
+            android:layout_toEndOf="@+id/lightImage"
+            android:text="@string/ip"
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/healthText"
+            android:layout_width="61dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ip"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/lightImage"
+            android:text="Health OK"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
