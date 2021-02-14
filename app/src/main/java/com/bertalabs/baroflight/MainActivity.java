@@ -2,6 +2,7 @@ package com.bertalabs.baroflight;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     Handler handler = new Handler();
     Runnable runnable;
-    int delay = 3000;
+    int delay = 5000;
 
     @Override
     protected void onResume() {
@@ -29,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 handler.postDelayed(runnable, delay);
                 cache.update();
-
-                Toast.makeText(MainActivity.this, "update performed",
-                        Toast.LENGTH_SHORT).show();
             }
         }, delay);
         super.onResume();
@@ -47,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cache = LightLocationCache.getInstance();
-
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
 
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);

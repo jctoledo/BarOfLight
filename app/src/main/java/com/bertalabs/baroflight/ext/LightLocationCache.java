@@ -2,6 +2,8 @@ package com.bertalabs.baroflight.ext;
 
 import android.util.Log;
 
+import com.bertalabs.baroflight.R;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,8 +27,7 @@ public class LightLocationCache {
     /**
      * How often to perform hard refresh
      */
-    // TODO change back to 60
-    public int hardRefreshTime = 6;
+    public int hardRefreshTime = 60;
     public LocalDateTime startTime;
     private String TAG = "LIGHTCACHE";
     private HashMap<String, Light> ipToLight = new HashMap<>();

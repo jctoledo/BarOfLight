@@ -36,7 +36,6 @@ public class NetworkUtils {
         OkHttpClient client = new OkHttpClient();
         for (int i = 1; i <= 255; i++) {
             final String lightReqAdr = baseIp + i + "/status";
-            final String lightIP = baseIp + i;
             Request req = new Request.Builder().url(lightReqAdr).build();
             client.newCall(req).enqueue(new Callback() {
                 @Override
@@ -47,17 +46,14 @@ public class NetworkUtils {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     try (ResponseBody responseBody = response.body()) {
-                        if (!response.isSuccessful()){
-                            Log.d(TAG, "SEARCHING FOR LIGHT - code: "+response.code()+" => "
-                                    + response);
-                        } else {
-                            String lightReplyRaw = new BufferedReader(
-                                    new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
-                                    .collect(Collectors.joining("\n"));
-                            if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
-                                rm.put(lightIP, lightReplyRaw);
-                            }
+
+                        String lightReplyRaw = new BufferedReader(
+                                new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
+                                .collect(Collectors.joining("\n"));
+                        if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
+                            rm.put(lightReqAdr, lightReplyRaw);
                         }
+
                     }
                 }
             });
@@ -111,7 +107,7 @@ public class NetworkUtils {
         Pattern typeP = Pattern.compile("Type: (.*)");
         Pattern healthP = Pattern.compile("Health: OK");
         Pattern rssi = Pattern.compile("RSSI: (-\\d+)");
-        Pattern tempP = Pattern.compile("Temperature: (\\d+)");
+        Pattern tempP = Pattern.compile("Temperature: (.*)");
         HashMap<String, Light> rm = new HashMap<>();
         for (Map.Entry<String, String> entry : ipToRaw.entrySet()) {
             Matcher typeM = typeP.matcher(entry.getValue());
@@ -141,7 +137,8 @@ public class NetworkUtils {
                 } else {
                     Log.d(TAG, "Could not find a type for this light!!!");
                 }
-                    Light l = new Light(entry.getKey(), m, tempV, reqP, actP, rssP, LocalDateTime.now(),
+
+                Light l = new Light(entry.getKey(), m, tempV, health, reqP, actP, rssP, LocalDateTime.now(),
                         group);
                 if (health) {
                     rm.put(entry.getKey(), l);
