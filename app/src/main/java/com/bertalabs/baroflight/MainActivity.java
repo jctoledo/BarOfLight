@@ -1,48 +1,22 @@
 package com.bertalabs.baroflight;
 
-import android.app.Activity;
-import android.companion.AssociationRequest;
-import android.companion.CompanionDeviceManager;
-import android.companion.WifiDeviceFilter;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.net.MacAddress;
-import android.net.wifi.ScanResult;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.bertalabs.baroflight.ext.LightLocationCache;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import org.jetbrains.annotations.NotNull;
+import com.bertalabs.baroflight.ext.Light;
+import com.bertalabs.baroflight.ext.LightLocationCache;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
     private LightLocationCache cache = LightLocationCache.getInstance();
 
     Handler handler = new Handler();
@@ -50,7 +24,7 @@ public class MainActivity extends AppCompatActivity  {
     int delay = 3000;
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         handler.postDelayed(runnable = new Runnable() {
             public void run() {
                 handler.postDelayed(runnable, delay);
@@ -75,7 +49,6 @@ public class MainActivity extends AppCompatActivity  {
         cache = LightLocationCache.getInstance();
 
 
-
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
@@ -89,6 +62,8 @@ public class MainActivity extends AppCompatActivity  {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
-
+    public List<Light> getCachedLights(){
+        return this.cache.getLights();
+    }
 
 }

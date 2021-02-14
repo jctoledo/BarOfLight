@@ -35,12 +35,13 @@ public class NetworkUtils {
         final Map<String, String> rm = new HashMap<>();
         OkHttpClient client = new OkHttpClient();
         for (int i = 1; i <= 255; i++) {
-            final String adr = baseIp + i + "/status";
-            Request req = new Request.Builder().url(adr).build();
+            final String lightReqAdr = baseIp + i + "/status";
+            final String lightIP = baseIp + i;
+            Request req = new Request.Builder().url(lightReqAdr).build();
             client.newCall(req).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d(TAG, "SEARCHING FOR LIGHT - WRONG IP GUESS - "+adr);
+                    Log.d(TAG, "SEARCHING FOR LIGHT - WRONG IP GUESS - "+lightReqAdr);
                 }
 
                 @Override
@@ -54,7 +55,7 @@ public class NetworkUtils {
                                     new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
                                     .collect(Collectors.joining("\n"));
                             if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
-                                rm.put(adr, lightReplyRaw);
+                                rm.put(lightIP, lightReplyRaw);
                             }
                         }
                     }
@@ -73,23 +74,6 @@ public class NetworkUtils {
      */
     public static boolean checkLightStatus( String anHttpAddress)  {
         final boolean[] r = {false};
-//        new Thread(new Runnable(){
-//            @Override
-//            public void run() {
-//                // Do network action in this function
-
-//                Request req = new Request.Builder().url(anHttpAddress).build();
-//                try {
-//
-//                    Response res = client.newCall(req).execute();
-//                    if (res.isSuccessful()){
-//                        r[0] = true;
-//                    }
-//                } catch (IOException e) {
-//                    Log.d(TAG, "something bad happened when asking for: "+anHttpAddress);
-//                }
-//            }
-//        }).start();
         final Request req = new Request.Builder().url(anHttpAddress).build();
         client.newCall(req).enqueue(new Callback() {
             @Override
@@ -125,20 +109,25 @@ public class NetworkUtils {
         Pattern requestedPwr = Pattern.compile("Requested Power .*:(.*)");
         Pattern actualPwr = Pattern.compile("Actual Power .*:(.*)");
         Pattern typeP = Pattern.compile("Type: (.*)");
+        Pattern healthP = Pattern.compile("Health: OK");
         Pattern rssi = Pattern.compile("RSSI: (-\\d+)");
+        Pattern tempP = Pattern.compile("Temperature: (\\d+)");
         HashMap<String, Light> rm = new HashMap<>();
         for (Map.Entry<String, String> entry : ipToRaw.entrySet()) {
             Matcher typeM = typeP.matcher(entry.getValue());
             Matcher macM = mac.matcher(entry.getValue());
             Matcher reqM = requestedPwr.matcher(entry.getValue());
             Matcher actM = actualPwr.matcher(entry.getValue());
-            boolean health = Pattern.matches("Health: OK", entry.getValue());
             Matcher rssiM = rssi.matcher(entry.getValue());
+            Matcher tempM = tempP.matcher(entry.getValue());
+            boolean health = healthP.matcher(entry.getValue()).find();
+
             if (macM.find() && reqM.find() &&
-                    actM.find() && rssiM.find()) {
+                    actM.find() && rssiM.find() && tempM.find()) {
                 String m = Objects.requireNonNull(macM.group(1)).trim();
                 int actP = Integer.parseInt(Objects.requireNonNull(actM.group(1)).trim());
                 int reqP = Integer.parseInt(Objects.requireNonNull(reqM.group(1)).trim());
+                double tempV = Double.parseDouble(Objects.requireNonNull(tempM.group(1)).trim());
                 int rssP = Integer.parseInt(Objects.requireNonNull(rssiM.group(1)).trim());
                 Light.LightGroup group = Light.LightGroup.FRONT;
                 // TODO clean this out once you can test it
@@ -149,8 +138,10 @@ public class NetworkUtils {
                         Log.w(TAG, "found an old firmware light!");
                     }
                     group = Light.LightGroup.valueOf(lightType);
-                } else {Log.d(TAG, "Could not find a type for this light!!!");}
-                Light l = new Light(entry.getKey(), m, reqP, actP, rssP, LocalDateTime.now(),
+                } else {
+                    Log.d(TAG, "Could not find a type for this light!!!");
+                }
+                    Light l = new Light(entry.getKey(), m, tempV, reqP, actP, rssP, LocalDateTime.now(),
                         group);
                 if (health) {
                     rm.put(entry.getKey(), l);
