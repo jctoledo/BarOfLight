@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- https://coolors.co/ff6700-ebebeb-c0c0c0-3a6ea5-004e98-003049-->
     <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryDark">#1D1F26</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="verydark">#00065c</color>
+    <color name="dark">#003049</color>
+    <color name="normal">#004e98</color>
+    <color name="silver">#c0c0c0</color>
+    <color name="platinum">#ebebeb</color>
+    <color name="orange">#FF6700</color>
 </resources>

@@ -2,8 +2,11 @@ package com.bertalabs.baroflight;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -19,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private LightLocationCache cache = LightLocationCache.getInstance();
-
+    ToggleButton powerToggle, linkToggle;
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 5000;
@@ -47,9 +50,23 @@ public class MainActivity extends AppCompatActivity {
         cache = LightLocationCache.getInstance();
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
-
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        powerToggle = (ToggleButton) findViewById(R.id.powerTgl);
+        powerToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    powerToggle.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_power_button_on, getApplicationContext().getTheme()));
+                } else {
+                    powerToggle.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_power_button, getApplicationContext().getTheme()));
+                }
+            }
+        });
+
+        powerToggle.isChecked();
+
+
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
