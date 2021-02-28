@@ -2,10 +2,7 @@ package com.bertalabs.baroflight;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.view.Window;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,18 +11,16 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.bertalabs.baroflight.ext.Light;
 import com.bertalabs.baroflight.ext.LightLocationCache;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private LightLocationCache cache = LightLocationCache.getInstance();
     ToggleButton powerToggle, linkToggle;
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 5000;
+    private LightLocationCache cache = LightLocationCache.getInstance();
 
     @Override
     protected void onResume() {
@@ -48,11 +43,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cache = LightLocationCache.getInstance();
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-
         powerToggle = (ToggleButton) findViewById(R.id.powerTgl);
         powerToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -63,10 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
         powerToggle.isChecked();
-
-
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -78,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
-    public List<Light> getCachedLights(){
-        return this.cache.getLights();
+    public LightLocationCache getCache() {
+        return this.cache;
     }
 
 }

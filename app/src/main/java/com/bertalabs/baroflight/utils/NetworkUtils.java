@@ -1,6 +1,8 @@
-package com.bertalabs.baroflight.ext;
+package com.bertalabs.baroflight.utils;
 
 import android.util.Log;
+
+import com.bertalabs.baroflight.ext.Light;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,14 +26,14 @@ import okhttp3.ResponseBody;
 
 public class NetworkUtils {
 
-    private static final String TAG = "NETWORKUTILS -" ;
+    private static final String TAG = "NETWORKUTILS -";
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .writeTimeout(5, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
             .build();
 
-    public static HashMap<String, Light> findLights(String baseIp) throws UnhealthyLightException{
+    public static HashMap<String, Light> findLights(String baseIp) throws UnhealthyLightException {
         final Map<String, String> rm = new HashMap<>();
         OkHttpClient client = new OkHttpClient();
         for (int i = 1; i <= 255; i++) {
@@ -40,7 +42,7 @@ public class NetworkUtils {
             client.newCall(req).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d(TAG, "SEARCHING FOR LIGHT - WRONG IP GUESS - "+lightReqAdr);
+                    Log.d(TAG, "SEARCHING FOR LIGHT - WRONG IP GUESS - " + lightReqAdr);
                 }
 
                 @Override
@@ -52,8 +54,16 @@ public class NetworkUtils {
                                 .collect(Collectors.joining("\n"));
                         if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
                             rm.put(lightReqAdr, lightReplyRaw);
-                        }
+                            rm.put(lightReqAdr + "a", lightReplyRaw);
+                            rm.put(lightReqAdr + "45a", lightReplyRaw);
 
+                            rm.put(lightReqAdr + "3a", lightReplyRaw);
+
+                            rm.put(lightReqAdr + "a4", lightReplyRaw);
+                            rm.put(lightReqAdr + "a32", lightReplyRaw);
+
+
+                        }
                     }
                 }
             });
@@ -68,20 +78,20 @@ public class NetworkUtils {
      * @param anHttpAddress an http://[IP]/status address where [IP] is replaced with some val
      * @return false if no http 200 is found
      */
-    public static boolean checkLightStatus( String anHttpAddress)  {
+    public static boolean checkLightStatus(String anHttpAddress) {
         final boolean[] r = {false};
         final Request req = new Request.Builder().url(anHttpAddress).build();
         client.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d(TAG, "SEARCHING FOR LIGHT checkLightStatus - WRONG IP GUESS - "+ call.toString());
+                Log.d(TAG, "SEARCHING FOR LIGHT checkLightStatus - WRONG IP GUESS - " + call.toString());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful()){
-                        Log.d(TAG, "SEARCHING FOR LIGHT - code: "+response.code()+" => "
+                    if (!response.isSuccessful()) {
+                        Log.d(TAG, "SEARCHING FOR LIGHT - code: " + response.code() + " => "
                                 + response);
                     } else {
                         String lightReplyRaw = new BufferedReader(
@@ -94,13 +104,11 @@ public class NetworkUtils {
                 }
             }
         });
-        if (r[0])
-            return true;
-        return false;
+        return r[0];
     }
 
 
-    private static HashMap<String, Light> makeIPToLight(Map<String, String> ipToRaw) throws UnhealthyLightException{
+    private static HashMap<String, Light> makeIPToLight(Map<String, String> ipToRaw) throws UnhealthyLightException {
         Pattern mac = Pattern.compile("MAC: (.*)");
         Pattern requestedPwr = Pattern.compile("Requested Power .*:(.*)");
         Pattern actualPwr = Pattern.compile("Actual Power .*:(.*)");
@@ -127,9 +135,9 @@ public class NetworkUtils {
                 int rssP = Integer.parseInt(Objects.requireNonNull(rssiM.group(1)).trim());
                 Light.LightGroup group = Light.LightGroup.FRONT;
                 // TODO clean this out once you can test it
-                if (typeM.find()){
+                if (typeM.find()) {
                     String lightType = Objects.requireNonNull(typeM.group(1).trim());
-                    if (lightType.equals("Light")){
+                    if (lightType.equals("Light")) {
                         lightType = "FRONT";
                         Log.w(TAG, "found an old firmware light!");
                     }

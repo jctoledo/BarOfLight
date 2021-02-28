@@ -15,12 +15,6 @@ public class Light {
     public LightGroup group;
     public LocalDateTime lastSeen;
 
-    public enum LightGroup {
-        FRONT,
-        DITCH,
-        FILL;
-    }
-
     public Light(String ip_address, String mac_address, double temperature, boolean health, int request_power, int actual_power,
                  int rssi, LocalDateTime lastSeen, LightGroup group) {
         this.ip_address = ip_address;
@@ -55,6 +49,12 @@ public class Light {
     public int hashCode() {
         return Objects.hash(ip_address, health, mac_address, request_power, actual_power, temperature,
                 rssi, lastSeen, group);
+    }
+
+    public enum LightGroup {
+        FRONT,
+        DITCH,
+        FILL
     }
 
 }

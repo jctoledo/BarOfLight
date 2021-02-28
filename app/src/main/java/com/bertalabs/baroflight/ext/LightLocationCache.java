@@ -2,7 +2,10 @@ package com.bertalabs.baroflight.ext;
 
 import android.util.Log;
 
-import com.bertalabs.baroflight.R;
+import androidx.lifecycle.MutableLiveData;
+
+import com.bertalabs.baroflight.utils.NetworkUtils;
+import com.bertalabs.baroflight.utils.UnhealthyLightException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,18 +15,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-
-public class LightLocationCache {
+public class LightLocationCache extends MutableLiveData<LightLocationCache> {
     private static final String BASE_HTTP_ADDR = "http://192.168.1.";
     private static LightLocationCache instance;
-    private final OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .build();
+
     /**
      * How often to perform hard refresh
      */
@@ -38,9 +34,9 @@ public class LightLocationCache {
                 Duration.between(startTime, LocalDateTime.now()).getSeconds() > hardRefreshTime) {
             try {
                 ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
-            } catch (UnhealthyLightException e){
+            } catch (UnhealthyLightException e) {
                 disconnectedLights.add(e.light);
-                Log.w(TAG, "found an unhealthy light at cache creation! - "+e.light.ip_address);
+                Log.w(TAG, "found an unhealthy light at cache creation! - " + e.light.ip_address);
             }
             startTime = LocalDateTime.now();
         }
@@ -59,6 +55,13 @@ public class LightLocationCache {
         return new ArrayList<Light>(this.ipToLight.values());
     }
 
+    /**
+     * @return True if something is in the cache
+     */
+    public boolean exists() {
+        return this.ipToLight.values().size() > 0;
+    }
+
     //TODO: detect a lost light
     //TODO: detect a new light
     public void update() {
@@ -69,7 +72,7 @@ public class LightLocationCache {
                 ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
             } catch (UnhealthyLightException e) {
                 disconnectedLights.add(e.light);
-                Log.d(TAG , "Added an unhealthy light - updating! ");
+                Log.d(TAG, "Added an unhealthy light - updating! ");
             }
         } else {
             fastUpdate();
@@ -94,5 +97,11 @@ public class LightLocationCache {
             }
         }
         disconnectedLights = disconnected;
+    }
+
+    public void destroy() {
+        instance = null;
+        ipToLight = new HashMap<>();
+        disconnectedLights = new HashSet<>();
     }
 }

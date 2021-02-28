@@ -1,26 +1,40 @@
 package com.bertalabs.baroflight.ui.front;
 
-import android.widget.Button;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.bertalabs.baroflight.ext.Light;
 import com.bertalabs.baroflight.ext.LightLocationCache;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+
 public class FrontViewModel extends ViewModel {
+    private LightLocationCache lightCache;
 
-    private MutableLiveData<String> mText;
-    private Button hButton;
-    private LightLocationCache cache = LightLocationCache.getInstance();
     public FrontViewModel() {
-        cache = LightLocationCache.getInstance();
-        mText = new MutableLiveData<>();
-
-        mText.setValue("This is home fragment");
+        lightCache = LightLocationCache.getInstance();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LightLocationCache getLightCache() {
+        if (lightCache == null) {
+            lightCache = LightLocationCache.getInstance();
+        }
+        return lightCache;
+    }
+
+    public List<Light> getLights() {
+
+        await().atMost(10, SECONDS).until(() -> getLightCache().exists());
+        if (lightCache.getLights() != null) {
+            return lightCache.getLights();
+        }
+        return new ArrayList<>();
+    }
+
+    public void update() {
+        lightCache.update();
     }
 }

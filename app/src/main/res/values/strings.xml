@@ -11,5 +11,6 @@
     <string name="not_healthy">NOT HEALTHY - THIS IS BAD</string>
     <string name="healthy">Health OK</string>
     <string name="disconnected">Disconnected</string>
+    <string name="headlihgts">HEADLIGHTS</string>
 
 </resources>

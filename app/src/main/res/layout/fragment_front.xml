@@ -9,53 +9,53 @@
 
 
     <!--    <ToggleButton-->
-<!--        android:id="@+id/beamLink"-->
-<!--        android:layout_width="269dp"-->
-<!--        android:layout_height="65dp"-->
-<!--        android:layout_marginStart="12dp"-->
+    <!--        android:id="@+id/beamLink"-->
+    <!--        android:layout_width="269dp"-->
+    <!--        android:layout_height="65dp"-->
+    <!--        android:layout_marginStart="12dp"-->
 
-<!--        android:layout_marginTop="156dp"-->
-<!--        android:textOff="UNLINKED"-->
-<!--        android:textOn="LINKED"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/BarOutput" />-->
+    <!--        android:layout_marginTop="156dp"-->
+    <!--        android:textOff="UNLINKED"-->
+    <!--        android:textOn="LINKED"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/BarOutput" />-->
 
-<!--    <androidx.constraintlayout.widget.Guideline-->
-<!--        android:id="@+id/guideline"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintGuide_begin="0dp" />-->
+    <!--    <androidx.constraintlayout.widget.Guideline-->
+    <!--        android:id="@+id/guideline"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        app:layout_constraintGuide_begin="0dp" />-->
 
-<!--    <TextView-->
-<!--        android:id="@+id/powerLabel"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:text="INTENSITY"-->
-<!--        android:textColor="@color/silver"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/BarOutput"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/BarOutput" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/powerLabel"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="16dp"-->
+    <!--        android:text="INTENSITY"-->
+    <!--        android:textColor="@color/silver"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/BarOutput"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/BarOutput" />-->
 
-<!--    -->
+    <!--    -->
 
-<!--    <TextView-->
-<!--        android:id="@+id/textView3"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="MASTER"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/masterSwitch"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/masterSwitch" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView3"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="MASTER"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/masterSwitch"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/masterSwitch" />-->
 
-<!--    <TextView-->
-<!--        android:id="@+id/textView4"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:text="HIGH BEAMS"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/beamLink"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/powerLabel" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView4"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="8dp"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        android:text="HIGH BEAMS"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/beamLink"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/powerLabel" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lightView"

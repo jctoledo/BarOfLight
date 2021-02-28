@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bertalabs.baroflight.R;
 
-import org.w3c.dom.Text;
-
 public class LightViewHolder extends RecyclerView.ViewHolder {
     TextView ipAddress;
     TextView temperature;
