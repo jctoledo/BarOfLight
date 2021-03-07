@@ -1,7 +1,6 @@
 package com.bertalabs.baroflight;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
@@ -12,35 +11,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.bertalabs.baroflight.ext.LightLocationCache;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
     ToggleButton powerToggle, linkToggle, masterToggle;
-    Handler handler = new Handler();
-    Runnable runnable;
-    int delay = 5000;
+
     private long lastTouchTime = 0;
     private long currentTouchTime = 0;
-    private LightLocationCache cache = LightLocationCache.getInstance();
-
-    @Override
-    protected void onResume() {
-        handler.postDelayed(runnable = new Runnable() {
-            public void run() {
-                handler.postDelayed(runnable, delay);
-                cache.update();
-            }
-        }, delay);
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        handler.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
-        super.onPause();
-    }
 
     private ToggleButton makePowerToggleButton(ToggleButton aToggle) {
         aToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -85,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cache = LightLocationCache.getInstance();
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -102,9 +79,4 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
-
-    public LightLocationCache getCache() {
-        return this.cache;
-    }
-
 }
