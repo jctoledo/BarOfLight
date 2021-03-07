@@ -17,9 +17,9 @@ public class LightViewHolder extends RecyclerView.ViewHolder {
 
     public LightViewHolder(@NonNull View itemView) {
         super(itemView);
-        temperature = (TextView) itemView.findViewById(R.id.temperatureValue);
-        ipAddress = (TextView) itemView.findViewById(R.id.ipValue);
-        image = (ImageView) itemView.findViewById(R.id.lightImage);
-        health = (TextView) itemView.findViewById(R.id.healthText);
+        temperature = itemView.findViewById(R.id.temperatureValue);
+        ipAddress = itemView.findViewById(R.id.ipValue);
+        image = itemView.findViewById(R.id.lightImage);
+        health = itemView.findViewById(R.id.healthText);
     }
 }

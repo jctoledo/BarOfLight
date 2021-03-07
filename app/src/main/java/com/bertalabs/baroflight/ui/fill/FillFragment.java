@@ -37,9 +37,9 @@ public class FillFragment extends Fragment {
                 textView.setText(s);
             }
         });
-        progress = (ProgressBar) root.findViewById(R.id.progressBar1);
-        text = (TextView) root.findViewById(R.id.textView1);
-        button = (Button) root.findViewById(R.id.button1);
+        progress = root.findViewById(R.id.progressBar1);
+        text = root.findViewById(R.id.textView1);
+        button = root.findViewById(R.id.button1);
         button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {

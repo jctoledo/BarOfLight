@@ -53,7 +53,7 @@ public class FrontFragment extends Fragment {
                 ViewModelProviders.of(this).get(FrontViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_front, container, false);
-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.lightView);
+        RecyclerView recyclerView = root.findViewById(R.id.lightView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new LightAdapter(root.getContext(), frontViewModel.getLights());

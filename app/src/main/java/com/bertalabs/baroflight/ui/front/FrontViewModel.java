@@ -8,9 +8,6 @@ import com.bertalabs.baroflight.ext.LightLocationCache;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
-
 public class FrontViewModel extends ViewModel {
     private LightLocationCache lightCache;
 
@@ -27,7 +24,6 @@ public class FrontViewModel extends ViewModel {
 
     public List<Light> getLights() {
 
-        await().atMost(10, SECONDS).until(() -> getLightCache().exists());
         if (lightCache.getLights() != null) {
             return lightCache.getLights();
         }
