@@ -2,6 +2,7 @@ package com.bertalabs.baroflight;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
@@ -16,10 +17,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
-    ToggleButton powerToggle, linkToggle;
+    ToggleButton powerToggle, linkToggle, masterToggle;
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 5000;
+    private long lastTouchTime = 0;
+    private long currentTouchTime = 0;
     private LightLocationCache cache = LightLocationCache.getInstance();
 
     @Override
@@ -39,6 +42,46 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    private ToggleButton makePowerToggleButton(ToggleButton aToggle) {
+        aToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    aToggle.setBackgroundDrawable(
+                            getResources().getDrawable(
+                                    R.drawable.ic_power_button_on,
+                                    getApplicationContext().getTheme()));
+                } else {
+                    aToggle.setBackgroundDrawable(
+                            getResources().getDrawable(
+                                    R.drawable.ic_power_button,
+                                    getApplicationContext().getTheme()));
+                }
+            }
+        });
+        aToggle.isChecked();
+        return aToggle;
+    }
+
+
+    private ToggleButton makeMasterToggle(ToggleButton aToggle) {
+        aToggle.setOnClickListener(new CompoundButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean buttonState = aToggle.isChecked();
+                lastTouchTime = currentTouchTime;
+                currentTouchTime = System.currentTimeMillis();
+                if (currentTouchTime - lastTouchTime < 400) {
+                    aToggle.setChecked(buttonState);
+                    lastTouchTime = 0;
+                    currentTouchTime = 0;
+                } else {
+                    aToggle.setChecked(!buttonState);
+                }
+            }
+        });
+        return aToggle;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,17 +89,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        powerToggle = (ToggleButton) findViewById(R.id.powerTgl);
-        powerToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    powerToggle.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_power_button_on, getApplicationContext().getTheme()));
-                } else {
-                    powerToggle.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_power_button, getApplicationContext().getTheme()));
-                }
-            }
-        });
-        powerToggle.isChecked();
+
+        masterToggle = makeMasterToggle(findViewById(R.id.masterToggle));
+        powerToggle = makePowerToggleButton(findViewById(R.id.powerToggle));
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
