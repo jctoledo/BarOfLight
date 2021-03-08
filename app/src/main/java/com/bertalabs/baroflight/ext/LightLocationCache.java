@@ -55,19 +55,12 @@ public class LightLocationCache extends MutableLiveData<LightLocationCache> {
         return new ArrayList<Light>(this.ipToLight.values());
     }
 
-    /**
-     * @return True if something is in the cache
-     */
-    public boolean exists() {
-        return this.ipToLight.values().size() > 0;
-    }
-
     //TODO: detect a lost light
     //TODO: detect a new light
     public void update() {
         if (Duration.between(this.startTime,
                 LocalDateTime.now()).getSeconds() > hardRefreshTime) {
-            Log.d(TAG, "regular update - after refresh seconds ");
+            Log.d(TAG, "regular update - after "+ hardRefreshTime +" refresh seconds ");
             try {
                 ipToLight = NetworkUtils.findLights(BASE_HTTP_ADDR);
             } catch (UnhealthyLightException e) {

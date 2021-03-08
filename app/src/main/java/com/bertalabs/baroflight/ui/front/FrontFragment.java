@@ -1,10 +1,13 @@
 package com.bertalabs.baroflight.ui.front;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,6 +25,51 @@ public class FrontFragment extends Fragment {
     int delay = 5000;
     private FrontViewModel frontViewModel;
     private LightAdapter adapter;
+
+    ToggleButton powerToggle, linkToggle, masterToggle;
+
+    private long lastTouchTime = 0;
+    private long currentTouchTime = 0;
+
+    private ToggleButton makePowerToggleButton(ToggleButton aToggle, Context aContext) {
+        aToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    aToggle.setBackgroundDrawable(
+                            getResources().getDrawable(
+                                    R.drawable.ic_power_button_on,
+                                    aContext.getTheme()));
+                } else {
+                    aToggle.setBackgroundDrawable(
+                            getResources().getDrawable(
+                                    R.drawable.ic_power_button,
+                                    aContext.getTheme()));
+                }
+            }
+        });
+        aToggle.isChecked();
+        return aToggle;
+    }
+
+
+    private ToggleButton makeMasterToggle(ToggleButton aToggle) {
+        aToggle.setOnClickListener(new CompoundButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean buttonState = aToggle.isChecked();
+                lastTouchTime = currentTouchTime;
+                currentTouchTime = System.currentTimeMillis();
+                if (currentTouchTime - lastTouchTime < 400) {
+                    aToggle.setChecked(buttonState);
+                    lastTouchTime = 0;
+                    currentTouchTime = 0;
+                } else {
+                    aToggle.setChecked(!buttonState);
+                }
+            }
+        });
+        return aToggle;
+    }
 
     public void onResume() {
         super.onResume();
@@ -51,8 +99,9 @@ public class FrontFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         frontViewModel =
                 ViewModelProviders.of(this).get(FrontViewModel.class);
-
         View root = inflater.inflate(R.layout.fragment_front, container, false);
+        powerToggle = makePowerToggleButton(root.findViewById(R.id.powerToggle), root.getContext());
+        masterToggle = makeMasterToggle(root.findViewById(R.id.masterToggle));
         RecyclerView recyclerView = root.findViewById(R.id.lightView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);

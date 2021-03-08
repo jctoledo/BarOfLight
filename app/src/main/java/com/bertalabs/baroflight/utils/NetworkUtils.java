@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -35,18 +37,25 @@ public class NetworkUtils {
 
     public static HashMap<String, Light> findLights(String baseIp) throws UnhealthyLightException {
         final Map<String, String> rm = new HashMap<>();
-        OkHttpClient client = new OkHttpClient();
+        final List<String> wrongIPGuesses = new ArrayList<>();
         for (int i = 1; i <= 255; i++) {
             final String lightReqAdr = baseIp + i + "/status";
             Request req = new Request.Builder().url(lightReqAdr).build();
             client.newCall(req).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d(TAG, "SEARCHING FOR LIGHT - WRONG IP GUESS - " + lightReqAdr);
+                    try {
+                        wrongIPGuesses.add(lightReqAdr);
+                    } catch (ArrayIndexOutOfBoundsException e2){
+                        e2.printStackTrace();
+                    }
+                    if(wrongIPGuesses.size() % 55 == 0){
+                      Log.i(TAG, "Searched "+wrongIPGuesses.size()+" wrong ips!");
+                    }
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(Call call, Response response) {
                     try (ResponseBody responseBody = response.body()) {
 
                         String lightReplyRaw = new BufferedReader(
@@ -54,13 +63,13 @@ public class NetworkUtils {
                                 .collect(Collectors.joining("\n"));
                         if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
                             rm.put(lightReqAdr, lightReplyRaw);
-                            rm.put(lightReqAdr + "a", lightReplyRaw);
-                            rm.put(lightReqAdr + "45a", lightReplyRaw);
-
-                            rm.put(lightReqAdr + "3a", lightReplyRaw);
-
-                            rm.put(lightReqAdr + "a4", lightReplyRaw);
-                            rm.put(lightReqAdr + "a32", lightReplyRaw);
+//                            rm.put(lightReqAdr + "a", lightReplyRaw);
+//                            rm.put(lightReqAdr + "45a", lightReplyRaw);
+//
+//                            rm.put(lightReqAdr + "3a", lightReplyRaw);
+//
+//                            rm.put(lightReqAdr + "a4", lightReplyRaw);
+//                            rm.put(lightReqAdr + "a32", lightReplyRaw);
 
 
                         }
@@ -90,17 +99,14 @@ public class NetworkUtils {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful()) {
-                        Log.d(TAG, "SEARCHING FOR LIGHT - code: " + response.code() + " => "
-                                + response);
-                    } else {
-                        String lightReplyRaw = new BufferedReader(
-                                new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
-                                .collect(Collectors.joining("\n"));
-                        if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
-                            r[0] = true;
-                        }
+
+                    String lightReplyRaw = new BufferedReader(
+                            new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
+                            .collect(Collectors.joining("\n"));
+                    if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
+                        r[0] = true;
                     }
+
                 }
             }
         });

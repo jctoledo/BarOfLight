@@ -10,8 +10,8 @@
     <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="403dp"
-        android:layout_height="382dp"
+        android:layout_width="match_parent"
+        android:layout_height="640dp"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -31,109 +31,109 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
-    <ToggleButton
-        android:id="@+id/powerToggle"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:background="@drawable/ic_power_button"
-        android:textSize="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <ToggleButton-->
+<!--        android:id="@+id/powerToggle"-->
+<!--        android:layout_width="180dp"-->
+<!--        android:layout_height="180dp"-->
+<!--        android:background="@drawable/ic_power_button"-->
+<!--        android:textSize="0dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
 
-        android:text="INTENSITY"
-        android:textColor="@color/silver"
-        app:layout_constraintBottom_toTopOf="@+id/BarOutput"
-        app:layout_constraintStart_toStartOf="@+id/BarOutput"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.47" />
+<!--        android:text="INTENSITY"-->
+<!--        android:textColor="@color/silver"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/BarOutput"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/BarOutput"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.47" />-->
 
-    <RadioGroup
-        android:id="@+id/BarOutput"
-        android:layout_width="170dp"
-        android:layout_height="112dp"
-        android:layout_marginStart="20dp"
-        android:checkedButton="@+id/radioMedium"
-        app:layout_constraintBottom_toBottomOf="@+id/powerToggle"
-        app:layout_constraintStart_toEndOf="@+id/powerToggle"
-        app:layout_constraintTop_toTopOf="parent">
+<!--    <RadioGroup-->
+<!--        android:id="@+id/BarOutput"-->
+<!--        android:layout_width="170dp"-->
+<!--        android:layout_height="112dp"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:checkedButton="@+id/radioMedium"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/powerToggle"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/powerToggle"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <RadioButton
-            android:id="@+id/radioHigh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@android:color/holo_red_dark"
-            android:paddingLeft="20dp"
-            android:paddingRight="60dp"
-            android:text="HIGH"
-            android:textColor="@android:color/holo_red_light"
-            android:textSize="18sp" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/radioHigh"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:buttonTint="@android:color/holo_red_dark"-->
+<!--            android:paddingLeft="20dp"-->
+<!--            android:paddingRight="60dp"-->
+<!--            android:text="HIGH"-->
+<!--            android:textColor="@android:color/holo_red_light"-->
+<!--            android:textSize="18sp" />-->
 
-        <RadioButton
-            android:id="@+id/radioMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@android:color/holo_orange_dark"
-            android:paddingLeft="20dp"
-            android:paddingRight="60dp"
-            android:text="MED"
-            android:textColor="@android:color/holo_orange_light"
-            android:textSize="18sp" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/radioMedium"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:buttonTint="@android:color/holo_orange_dark"-->
+<!--            android:paddingLeft="20dp"-->
+<!--            android:paddingRight="60dp"-->
+<!--            android:text="MED"-->
+<!--            android:textColor="@android:color/holo_orange_light"-->
+<!--            android:textSize="18sp" />-->
 
-        <RadioButton
-            android:id="@+id/radioLow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:buttonTint="@android:color/holo_green_dark"
-            android:paddingLeft="20dp"
-            android:paddingRight="60dp"
-            android:text="LOW"
-            android:textColor="@android:color/holo_green_light"
-            android:textSize="18sp" />
-    </RadioGroup>
+<!--        <RadioButton-->
+<!--            android:id="@+id/radioLow"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:baselineAligned="false"-->
+<!--            android:buttonTint="@android:color/holo_green_dark"-->
+<!--            android:paddingLeft="20dp"-->
+<!--            android:paddingRight="60dp"-->
+<!--            android:text="LOW"-->
+<!--            android:textColor="@android:color/holo_green_light"-->
+<!--            android:textSize="18sp" />-->
+<!--    </RadioGroup>-->
 
-    <ToggleButton
-        android:id="@+id/beamToggle"
-        android:layout_width="315dp"
-        android:layout_height="52dp"
-        android:textOff="UN-LINKED"
-        android:textOn="LINKED"
-        android:layout_marginLeft="8sp"
-        app:layout_constraintBottom_toTopOf="@+id/nav_view"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <ToggleButton-->
+<!--        android:id="@+id/beamToggle"-->
+<!--        android:layout_width="315dp"-->
+<!--        android:layout_height="52dp"-->
+<!--        android:textOff="UN-LINKED"-->
+<!--        android:textOn="LINKED"-->
+<!--        android:layout_marginLeft="8sp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/nav_view"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/headlihgts"
-        android:layout_marginLeft="10sp"
-        android:textColor="@color/silver"
-        app:layout_constraintBottom_toTopOf="@+id/beamToggle"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/headlihgts"-->
+<!--        android:layout_marginLeft="10sp"-->
+<!--        android:textColor="@color/silver"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/beamToggle"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-    <ToggleButton
-        android:id="@+id/masterToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="52dp"
-        android:text="ToggleButton"
-        app:layout_constraintBottom_toTopOf="@+id/nav_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/beamToggle" />
+<!--    <ToggleButton-->
+<!--        android:id="@+id/masterToggle"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="52dp"-->
+<!--        android:text="ToggleButton"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/nav_view"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/beamToggle" />-->
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MASTER"
-        android:textColor="@color/silver"
-        app:layout_constraintBottom_toTopOf="@+id/masterToggle"
-        app:layout_constraintStart_toEndOf="@+id/beamToggle" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="MASTER"-->
+<!--        android:textColor="@color/silver"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/masterToggle"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/beamToggle" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
