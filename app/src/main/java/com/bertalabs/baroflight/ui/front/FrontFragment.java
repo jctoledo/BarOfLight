@@ -1,6 +1,5 @@
 package com.bertalabs.baroflight.ui.front;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -10,13 +9,15 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bertalabs.baroflight.R;
-import com.bertalabs.baroflight.ext.LightAdapter;
+import com.bertalabs.baroflight.ext.LightIntensity;
+import com.bertalabs.baroflight.ui.LightAdapter;
 
 public class FrontFragment extends Fragment {
 
@@ -31,28 +32,31 @@ public class FrontFragment extends Fragment {
     private long lastTouchTime = 0;
     private long currentTouchTime = 0;
 
-    private ToggleButton makePowerToggleButton(ToggleButton aToggle, Context aContext) {
+    private ToggleButton makePowerToggleButton(ToggleButton aToggle) {
         aToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    frontViewModel.getLightCache().modifyIntensity(LightIntensity.MEDIUM);
                     aToggle.setBackgroundDrawable(
-                            getResources().getDrawable(
+                            ResourcesCompat.getDrawable(getResources(),
                                     R.drawable.ic_power_button_on,
-                                    aContext.getTheme()));
+                                    null));
                 } else {
+                    frontViewModel.getLightCache().modifyIntensity(LightIntensity.OFF);
                     aToggle.setBackgroundDrawable(
-                            getResources().getDrawable(
-                                    R.drawable.ic_power_button,
-                                    aContext.getTheme()));
+                            ResourcesCompat.getDrawable(getResources(),
+                                    R.drawable.ic_power_button_off,
+                                    null));
                 }
             }
         });
-        aToggle.isChecked();
+
+
         return aToggle;
     }
 
 
-    private ToggleButton makeMasterToggle(ToggleButton aToggle) {
+    private ToggleButton makeMasterToggle(ToggleButton aToggle, ToggleButton masterToggle) {
         aToggle.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,6 +65,7 @@ public class FrontFragment extends Fragment {
                 currentTouchTime = System.currentTimeMillis();
                 if (currentTouchTime - lastTouchTime < 400) {
                     aToggle.setChecked(buttonState);
+                    masterToggle.setChecked(buttonState);
                     lastTouchTime = 0;
                     currentTouchTime = 0;
                 } else {
@@ -100,8 +105,8 @@ public class FrontFragment extends Fragment {
         frontViewModel =
                 ViewModelProviders.of(this).get(FrontViewModel.class);
         View root = inflater.inflate(R.layout.fragment_front, container, false);
-        powerToggle = makePowerToggleButton(root.findViewById(R.id.powerToggle), root.getContext());
-        masterToggle = makeMasterToggle(root.findViewById(R.id.masterToggle));
+        powerToggle = makePowerToggleButton(root.findViewById(R.id.powerToggle));
+        masterToggle = makeMasterToggle(root.findViewById(R.id.masterToggle), root.findViewById(R.id.powerToggle));
         RecyclerView recyclerView = root.findViewById(R.id.lightView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);

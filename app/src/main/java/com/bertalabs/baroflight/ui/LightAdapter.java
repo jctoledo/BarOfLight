@@ -1,4 +1,4 @@
-package com.bertalabs.baroflight.ext;
+package com.bertalabs.baroflight.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bertalabs.baroflight.R;
+import com.bertalabs.baroflight.ext.Light;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -15,51 +15,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
-    ToggleButton powerToggle, linkToggle, masterToggle;
-
-    private long lastTouchTime = 0;
-    private long currentTouchTime = 0;
-
-    private ToggleButton makePowerToggleButton(ToggleButton aToggle) {
-        aToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    aToggle.setBackgroundDrawable(
-                            getResources().getDrawable(
-                                    R.drawable.ic_power_button_on,
-                                    getApplicationContext().getTheme()));
-                } else {
-                    aToggle.setBackgroundDrawable(
-                            getResources().getDrawable(
-                                    R.drawable.ic_power_button,
-                                    getApplicationContext().getTheme()));
-                }
-            }
-        });
-        aToggle.isChecked();
-        return aToggle;
-    }
-
-
-    private ToggleButton makeMasterToggle(ToggleButton aToggle) {
-        aToggle.setOnClickListener(new CompoundButton.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean buttonState = aToggle.isChecked();
-                lastTouchTime = currentTouchTime;
-                currentTouchTime = System.currentTimeMillis();
-                if (currentTouchTime - lastTouchTime < 400) {
-                    aToggle.setChecked(buttonState);
-                    lastTouchTime = 0;
-                    currentTouchTime = 0;
-                } else {
-                    aToggle.setChecked(!buttonState);
-                }
-            }
-        });
-        return aToggle;
-    }
-
+    //TODO: Complete the layout files for all fragments
+    //TODO: Complete the fragement classes
+    //TODO: Add a spinner or something when searching for lights
+    //TODO: Show on a layout total connected lights
+    //TODO: Synchronize master toggle across all fragments (if all fragments' powertoggle is off then the master is off
+    //TODO: Detect disconnected light
+    //TODO: Detect new light
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

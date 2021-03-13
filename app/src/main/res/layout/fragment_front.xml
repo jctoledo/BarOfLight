@@ -10,7 +10,7 @@
         android:id="@+id/powerToggle"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:background="@drawable/ic_power_button"
+        android:background="@drawable/ic_power_button_off"
         android:textSize="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

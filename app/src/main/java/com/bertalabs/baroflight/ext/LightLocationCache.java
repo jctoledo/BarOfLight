@@ -55,8 +55,7 @@ public class LightLocationCache extends MutableLiveData<LightLocationCache> {
         return new ArrayList<Light>(this.ipToLight.values());
     }
 
-    //TODO: detect a lost light
-    //TODO: detect a new light
+
     public void update() {
         if (Duration.between(this.startTime,
                 LocalDateTime.now()).getSeconds() > hardRefreshTime) {
@@ -96,5 +95,14 @@ public class LightLocationCache extends MutableLiveData<LightLocationCache> {
         instance = null;
         ipToLight = new HashMap<>();
         disconnectedLights = new HashSet<>();
+    }
+
+    public void modifyIntensity(LightIntensity anIntensity){
+        for (Map.Entry<String, Light> entry : ipToLight.entrySet()) {
+            NetworkUtils.setLightIntensity(entry.getKey(), anIntensity);
+            entry.getValue().intensity = anIntensity;
+        }
+        Log.d(TAG, "turned everything - "+ anIntensity.toString());
+
     }
 }

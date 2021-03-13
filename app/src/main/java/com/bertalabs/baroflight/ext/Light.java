@@ -12,6 +12,7 @@ public class Light {
     public double temperature;
     public boolean health;
     public boolean isConnected;
+    public LightIntensity intensity;
     public LightGroup group;
     public LocalDateTime lastSeen;
 
@@ -27,6 +28,10 @@ public class Light {
         this.group = group;
         this.lastSeen = lastSeen;
         this.isConnected = true;
+    }
+
+    public void setIntensity(LightIntensity anIntentsity){
+        intensity = anIntentsity;
     }
 
     @Override

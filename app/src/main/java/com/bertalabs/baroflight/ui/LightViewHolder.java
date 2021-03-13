@@ -1,4 +1,4 @@
-package com.bertalabs.baroflight.ext;
+package com.bertalabs.baroflight.ui;
 
 import android.view.View;
 import android.widget.ImageView;

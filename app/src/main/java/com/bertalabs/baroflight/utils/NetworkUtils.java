@@ -2,6 +2,7 @@ package com.bertalabs.baroflight.utils;
 
 import android.util.Log;
 
+import com.bertalabs.baroflight.ext.LightIntensity;
 import com.bertalabs.baroflight.ext.Light;
 
 import java.io.BufferedReader;
@@ -48,6 +49,7 @@ public class NetworkUtils {
                         wrongIPGuesses.add(lightReqAdr);
                     } catch (ArrayIndexOutOfBoundsException e2){
                         e2.printStackTrace();
+                        Log.e(TAG,"\n\n\n"+wrongIPGuesses.size()+"\n\n\n"+lightReqAdr);
                     }
                     if(wrongIPGuesses.size() % 55 == 0){
                       Log.i(TAG, "Searched "+wrongIPGuesses.size()+" wrong ips!");
@@ -57,28 +59,67 @@ public class NetworkUtils {
                 @Override
                 public void onResponse(Call call, Response response) {
                     try (ResponseBody responseBody = response.body()) {
-
                         String lightReplyRaw = new BufferedReader(
-                                new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
+                                new InputStreamReader(
+                                        responseBody.byteStream(),
+                                        StandardCharsets.UTF_8)).lines()
                                 .collect(Collectors.joining("\n"));
-                        if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
-                            rm.put(lightReqAdr, lightReplyRaw);
-//                            rm.put(lightReqAdr + "a", lightReplyRaw);
-//                            rm.put(lightReqAdr + "45a", lightReplyRaw);
-//
-//                            rm.put(lightReqAdr + "3a", lightReplyRaw);
-//
-//                            rm.put(lightReqAdr + "a4", lightReplyRaw);
-//                            rm.put(lightReqAdr + "a32", lightReplyRaw);
-
-
+                        if (lightReplyRaw.contains("MAC:") &&
+                                lightReplyRaw.contains("<html>")) {
+                            rm.put(
+                                    lightReqAdr.substring(0, lightReqAdr.lastIndexOf("/")),
+                                    lightReplyRaw);
                         }
                     }
                 }
             });
-
         }
         return makeIPToLight(rm);
+    }
+
+
+    public static int setLightIntensity(String anHttpAddress, LightIntensity anInten){
+        String setVal = "1023";
+        switch (anInten){
+            case HIGH:
+                setVal = "1023";
+                break;
+            case MEDIUM:
+                setVal = "600";
+                break;
+            case LOW:
+                setVal = "300";
+                break;
+            case OFF:
+                setVal = "0";
+        }
+
+        final Request req = new Request.Builder().url(anHttpAddress+"/set/"+setVal).build();
+
+        client.newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(
+                        TAG,
+                        "SEARCHING FOR LIGHT checkLightStatus - WRONG IP GUESS - "
+                                + call.toString());
+            }
+            final int[] r = {1023};
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    String lightReplyRaw = new BufferedReader(
+                            new InputStreamReader(
+                                    responseBody.byteStream(),
+                                    StandardCharsets.UTF_8)).lines()
+                            .collect(Collectors.joining("\n"));
+                    if (lightReplyRaw.contains("Requested") && lightReplyRaw.contains("<html>")) {
+                        r[0] = 1;
+                    }
+                }
+            }
+        });
+        return -1;
     }
 
     /**
@@ -93,7 +134,10 @@ public class NetworkUtils {
         client.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d(TAG, "SEARCHING FOR LIGHT checkLightStatus - WRONG IP GUESS - " + call.toString());
+                Log.d(
+                        TAG,
+                        "SEARCHING FOR LIGHT checkLightStatus - WRONG IP GUESS - "
+                                + call.toString());
             }
 
             @Override
@@ -101,7 +145,9 @@ public class NetworkUtils {
                 try (ResponseBody responseBody = response.body()) {
 
                     String lightReplyRaw = new BufferedReader(
-                            new InputStreamReader(responseBody.byteStream(), StandardCharsets.UTF_8)).lines()
+                            new InputStreamReader(
+                                    responseBody.byteStream(),
+                                    StandardCharsets.UTF_8)).lines()
                             .collect(Collectors.joining("\n"));
                     if (lightReplyRaw.contains("MAC:") && lightReplyRaw.contains("<html>")) {
                         r[0] = true;
@@ -114,7 +160,8 @@ public class NetworkUtils {
     }
 
 
-    private static HashMap<String, Light> makeIPToLight(Map<String, String> ipToRaw) throws UnhealthyLightException {
+    private static HashMap<String, Light> makeIPToLight(Map<String, String> ipToRaw)
+            throws UnhealthyLightException {
         Pattern mac = Pattern.compile("MAC: (.*)");
         Pattern requestedPwr = Pattern.compile("Requested Power .*:(.*)");
         Pattern actualPwr = Pattern.compile("Actual Power .*:(.*)");
@@ -152,7 +199,15 @@ public class NetworkUtils {
                     Log.d(TAG, "Could not find a type for this light!!!");
                 }
 
-                Light l = new Light(entry.getKey(), m, tempV, health, reqP, actP, rssP, LocalDateTime.now(),
+                Light l = new Light(
+                        entry.getKey(),
+                        m,
+                        tempV,
+                        health,
+                        reqP,
+                        actP,
+                        rssP,
+                        LocalDateTime.now(),
                         group);
                 if (health) {
                     rm.put(entry.getKey(), l);
@@ -163,5 +218,4 @@ public class NetworkUtils {
         }
         return rm;
     }
-
 }
