@@ -1,28 +1,25 @@
-package com.bertalabs.baroflight.ext;
+package com.bertalabs.baroflight.lib;
+
+import com.bertalabs.baroflight.ext.LightIntensity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Light {
-    public String ip_address;
-    public String mac_address;
+public class Light extends Device {
     public int request_power;
     public int actual_power;
-    public int rssi;
     public double temperature;
     public boolean health;
     public boolean isConnected;
     public LightIntensity intensity;
-    public LightGroup group;
+    public DeviceGroup group;
     public LocalDateTime lastSeen;
 
     public Light(String ip_address, String mac_address, double temperature, boolean health, int request_power, int actual_power,
-                 int rssi, LocalDateTime lastSeen, LightGroup group) {
-        this.ip_address = ip_address;
-        this.mac_address = mac_address;
+                 int rssi, LocalDateTime lastSeen, DeviceGroup group) {
+        super(ip_address, mac_address, rssi);
         this.request_power = request_power;
         this.actual_power = actual_power;
-        this.rssi = rssi;
         this.health = health;
         this.temperature = temperature;
         this.group = group;
@@ -30,36 +27,32 @@ public class Light {
         this.isConnected = true;
     }
 
-    public void setIntensity(LightIntensity anIntentsity){
-        intensity = anIntentsity;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Light light = (Light) o;
         return request_power == light.request_power &&
                 actual_power == light.actual_power &&
-                rssi == light.rssi &&
-                temperature == light.temperature &&
-                group == light.group &&
+                Double.compare(light.temperature, temperature) == 0 &&
                 health == light.health &&
-                lastSeen.equals(light.lastSeen) &&
-                ip_address.equals(light.ip_address) &&
-                mac_address.equals(light.mac_address);
+                isConnected == light.isConnected &&
+                intensity == light.intensity &&
+                group == light.group &&
+                lastSeen.equals(light.lastSeen);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ip_address, health, mac_address, request_power, actual_power, temperature,
-                rssi, lastSeen, group);
+        return Objects.hash(super.hashCode(), request_power, actual_power, temperature, health, isConnected, intensity, group, lastSeen);
     }
 
-    public enum LightGroup {
+    public enum DeviceGroup {
         FRONT,
         DITCH,
-        FILL
+        FILL,
+        TELEMATICS
     }
 
 }

@@ -2,22 +2,22 @@ package com.bertalabs.baroflight.ui.front;
 
 import androidx.lifecycle.ViewModel;
 
-import com.bertalabs.baroflight.ext.Light;
-import com.bertalabs.baroflight.ext.LightLocationCache;
+import com.bertalabs.baroflight.lib.Light;
+import com.bertalabs.baroflight.bin.LightDeviceCache;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FrontViewModel extends ViewModel {
-    private LightLocationCache lightCache;
+    private LightDeviceCache lightCache;
 
     public FrontViewModel() {
-        lightCache = LightLocationCache.getInstance();
+        lightCache = LightDeviceCache.getInstance();
     }
 
-    public LightLocationCache getLightCache() {
+    public LightDeviceCache getLightCache() {
         if (lightCache == null) {
-            lightCache = LightLocationCache.getInstance();
+            lightCache = LightDeviceCache.getInstance();
         }
         return lightCache;
     }

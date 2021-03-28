@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bertalabs.baroflight.R;
-import com.bertalabs.baroflight.ext.Light;
+import com.bertalabs.baroflight.lib.Light;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class LightAdapter extends RecyclerView.Adapter {
     }
 
     public void onBindViewHolder(@NonNull LightViewHolder holder, int position) {
-        holder.ipAddress.setText(lights.get(position).ip_address);
+        holder.ipAddress.setText(lights.get(position).ipAddress);
         holder.temperature.setText(Double.toString(lights.get(position).temperature));
         if (!lights.get(position).isConnected) {
             holder.image.setImageResource(R.drawable.wifi_disconected);

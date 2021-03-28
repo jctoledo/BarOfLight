@@ -1,6 +1,6 @@
 package com.bertalabs.baroflight.utils;
 
-import com.bertalabs.baroflight.ext.Light;
+import com.bertalabs.baroflight.lib.Light;
 
 public class UnhealthyLightException extends Exception {
     public Light light;
